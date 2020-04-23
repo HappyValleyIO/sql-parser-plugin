@@ -15,45 +15,62 @@
  */
 
 plugins {
-    id "org.jetbrains.kotlin.jvm"
-    id "com.github.johnrengelman.shadow"
-    id 'maven-publish'
+  id "org.jetbrains.kotlin.jvm"
+  id "com.github.johnrengelman.shadow"
+  id 'maven-publish'
 }
 
 dependencies {
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
-    compileOnly "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
-    compileOnly "io.arrow-kt:compiler-plugin:$ARROW_META_VERSION"
-    compileOnly 'com.github.jsqlparser:jsqlparser:3.1'
+  compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
+  compileOnly "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
+  compileOnly "io.arrow-kt:compiler-plugin:$ARROW_META_VERSION"
+  compileOnly 'com.github.jsqlparser:jsqlparser:3.1'
 }
 
 compileKotlin {
-    kotlinOptions {
-        jvmTarget = "$JVM_TARGET_VERSION"
-    }
+  kotlinOptions {
+    jvmTarget = "$JVM_TARGET_VERSION"
+  }
 }
 
 // Create a new JAR with: Arrow Meta + new plugin
 shadowJar {
-    configurations = [project.configurations.compileOnly]
-    dependencies {
-        exclude("org.jetbrains.kotlin:kotlin-stdlib")
-        exclude("org.jetbrains.kotlin:kotlin-compiler-embeddable")
-    }
+  configurations = [project.configurations.compileOnly]
+  dependencies {
+    exclude("org.jetbrains.kotlin:kotlin-stdlib")
+    exclude("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+  }
 }
 
-maven(MavenPublication) {
-    groupId = 'io.happyvalley'
-    artifactId = 'sqlparserplugin'
-    version = '1.0'
+publishing {
+  publications {
+    maven(MavenPublication) {
+      groupId = 'io.happyvalley'
+      artifactId = 'sql-parser-plugin'
+      version = '1.0'
 
-    from components.java
+      from components.kotlin
 
-    developers {
-        developer {
+      pom {
+        developers {
+          developer {
             id = 'stepbeekio'
             name = 'Stephen van Beek'
             email = 'stephen@happyvalley.io'
+          }
         }
+      }
     }
+  }
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/OWNER/REPOSITORY")
+      credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+      }
+    }
+  }
 }
+
