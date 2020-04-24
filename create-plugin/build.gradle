@@ -70,9 +70,9 @@ bintray {
   key = System.getenv("BINTRAY_API_KEY")
   publications = ['maven']
   pkg {
-    repo = 'happy-valley-io-oss'
+    repo = 'maven'
     name = 'sql-parser-plugin'
-    userOrg = user
+    userOrg = 'happyvalleyio'
     licenses = ['MIT']
     vcsUrl = 'https://github.com/HappyValleyIO/sql-parser-plugin.git'
   }
