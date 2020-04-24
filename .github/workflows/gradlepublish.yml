@@ -27,7 +27,9 @@ jobs:
       run: |
         NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
         echo "New version: ${NEW_VERSION}"
-        gradle -Pversion=${NEW_VERSION} :create-plugin:publish --info
+        gradle -Pversion=${NEW_VERSION} :create-plugin:bintrayUpload --info
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}

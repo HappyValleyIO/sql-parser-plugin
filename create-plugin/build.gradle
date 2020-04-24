@@ -18,6 +18,7 @@ plugins {
   id "org.jetbrains.kotlin.jvm"
   id "com.github.johnrengelman.shadow"
   id 'maven-publish'
+  id "com.jfrog.bintray" version "1.8.5"
 }
 
 dependencies {
@@ -62,15 +63,17 @@ publishing {
       }
     }
   }
-  repositories {
-    maven {
-      name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/HappyValleyIO/sql-parser-plugin")
-      credentials {
-        username = System.getenv("USERNAME")
-        password = System.getenv("TOKEN")
-      }
-    }
-  }
 }
 
+bintray {
+  user = System.getenv("BINTRAY_USER")
+  key = System.getenv("BINTRAY_API_KEY")
+  publications = ['maven']
+  pkg {
+    repo = 'happy-valley-io-oss'
+    name = 'sql-parser-plugin'
+    userOrg = user
+    licenses = ['MIT']
+    vcsUrl = 'https://github.com/HappyValleyIO/sql-parser-plugin.git'
+  }
+}
